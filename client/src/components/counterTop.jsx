@@ -43,6 +43,7 @@ state = {
   //deletes selected page of counters
   handleDeletePage = (page) => {
     const pages = this.state.pages.filter((c) => c.id !== page.id); // filters anything but the one to delete
+    //sets new ids for all of them
     for (let i = 0; i < pages.length; i++) {
       pages[i].id = i + 1;
     }

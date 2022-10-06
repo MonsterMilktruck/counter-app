@@ -91,27 +91,15 @@ class CounterPages extends Component {
         <NavBar
           totalCounters={this.state.counters.filter((c) => c.value > 0).length}
           pageName ={this.props.currentPage.name}
+          nextPage = {this.props.onNextPage}
+          backPage = {this.props.onBackPage}
+          onGetIndexBottom = {this.props.onGetIndexBottom}
+          onGetIndexTop = {this.props.onGetIndexTop}
           page ={this.props.currentPage}
           onChangePageName={this.props.onChangePageName}
           editable={this.state.edit}
         />
         <main className="container">
-
-          {/* back page button */}
-        <button
-          onClick={this.props.onBackPage}
-           style={this.styleButton}
-           disabled={this.props.onGetIndexBottom}
-          className="btn btn-secondary btn-sm"
-        >back</button>
-
-          {/* next page button */}
-        <button
-          onClick={this.props.onNextPage}
-           style={this.styleButton}
-           disabled={this.props.onGetIndexTop}
-          className="btn btn-secondary btn-sm"
-        >next</button>
 
           {/* displays counters */}
           <Counters
