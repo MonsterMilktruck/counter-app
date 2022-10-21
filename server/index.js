@@ -27,7 +27,7 @@ res.send(result)
 app.get("/api/getFromId/:id", (req,res)=>{
 
 const id = req.params.pageID;
- db.query("SELECT * FROM page WHERE id = ?", id, 
+ db.query("SELECT * FROM page WHERE pageID = ?", id, 
  (err,result)=>{
     if(err) {
     console.log(err)

@@ -1,16 +1,14 @@
 
 import Page from "./Page";
-import { BrowserRouter, Routes, Route, Navigate, Link} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Link, useParams} from "react-router-dom";
 import React, { Component } from "react";
 import { findRenderedDOMComponentWithClass } from "react-dom/test-utils";
+import Axios from 'axios'
 
 class CounterTop extends Component {
 
 state = {
-    pages: [
-      { id: 1, name: "page #1", way: "/page1" },
-      { id: 2, name: "page #2", way: "/page2" },
-    ],
+    page: { id: 1, name: "page #1"},
     index: 0,
   };
 
@@ -71,6 +69,19 @@ state = {
     window.location.href=this.state.pages[index - 1].way;
   };
 
+  componentDidMount()
+  {
+    let url = window.location.href.split('/');
+    let index = url.indexOf('pages');
+    index += 1;
+    index = Number(url[index]);
+    Axios.get("http://localhost:3002/api/getFromId/" + index).then((data) =>{
+      let page = data.data;
+      this.setState({page});
+    })
+    this.setState({index});
+  }
+
   render() {
     return(
 
@@ -96,7 +107,7 @@ state = {
           </Routes> */}
 
 
-            {/* renders every page at the same time */}
+            {/* renders every page at the same time 
           {this.state.pages.map(page => <Route
             path={page.way}
             key= {page.id}
@@ -115,19 +126,17 @@ state = {
                 onGetIndexBottom={this.getIndexBottom()}>
               </Page>
             }
-          ></Route>)}
-          {/*<Page
-                key={this.state.pages.id}
-                id={this.state.pages.id}
+          ></Route>) */}
+          <Page
+                key={this.state.page.id}
+                id={this.state.page.id}
                 onAddPage={this.handleAddPage}
                 onDeletePage={this.handleDeletePage}
                 onNextPage={this.handleNextPage}
                 onBackPage={this.handleBackPage}
-                currentPage={this.state.pages[this.state.index]}
+                currentPage={this.state.page}
                 index={this.state.index}
-                onChangePageName = {this.handleChangePageName}
-                onGetIndexTop={this.getIndexTop()}
-                onGetIndexBottom={this.getIndexBottom()}>
+                onChangePageName = {this.handleChangePageName}>
               </Page>
           
         {/* {
@@ -150,24 +159,5 @@ state = {
   </div>
 );
 }
-    getIndexTop()
-    {
-      let val = false;
-      if(this.state.index.value === this.state.pages.length)
-      {
-        val = true;
-      }
-      return val;
-    }
-
-    getIndexBottom()
-    {
-      let val = false;
-      if(this.state.index.value === 1)
-      {
-        val = true;
-      }
-      return val;
-    }
 }
     export default CounterTop;

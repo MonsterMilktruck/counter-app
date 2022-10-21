@@ -18,7 +18,7 @@ function App() {
       // <div>
       //   <Routes>
       //     <Route path = 'counters' element=
-      // {<CounterTop/>}>
+       <CounterTop/>/*
       // </Route>
       // </Routes>
       // </div>
@@ -30,12 +30,12 @@ function App() {
        //add home for login too
        <BrowserRouter>
        <Routes>
-           <Route path="" element={<CounterTop />} />
+           <Route path="" element={<Landing />} />
            <Route path="home" element={<Home />} />
-           <Route path="allPages/*" element={<AllPagesDisplay />}/>
-           <Route path="pages" element={<CounterTop/>}/>
+           <Route exact path="pages" element={<AllPagesDisplay />}/>
+           <Route path="pages/:id" element={<CounterTop />} />
        </Routes>
-     </BrowserRouter>
+     </BrowserRouter> 
     );
   
 

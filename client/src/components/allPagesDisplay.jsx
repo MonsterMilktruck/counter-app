@@ -27,7 +27,7 @@ class AllPagesDisplay extends Component {
         return (
             <ol>
                 {this.state.pages.map(page => <li key={page.pageID}>
-                    <Link to={"/" + page.Tname}>{page.Tname}</Link></li>
+                    <Link to={"" + page.pageID}>{page.Tname}</Link></li>
                 )}
             </ol>
         );
