@@ -28,6 +28,7 @@ function App() {
        <Route path="allPages" element={<allPages />}/> */
 
        //add home for login too
+       
        <BrowserRouter>
        <Routes>
            <Route path="" element={<Landing />} />

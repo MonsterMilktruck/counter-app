@@ -71,77 +71,77 @@ state = {
     window.location.href=this.state.pages[index.value - 1].way;
   };
 
-    render() {
-        return(
-      <BrowserRouter>
-      <div>
+  render() {
+    return(
+  <BrowserRouter>
+  <div>
 
 {/* only renders 1 page at a time */}
-    {/* <Routes>
-              <Route
-                exact
-                path={this.state.pages[this.state.index.value - 1].way}
-                element={
-                  <CounterPages
-                    key={this.state.pages[this.state.index.value - 1].id}
-                    id={this.state.pages[this.state.index.value - 1].id}
-                    onAddPage={this.handleAddPage}
-                    onDeletePage={this.handleDeletePage}
-                    onNextPage={this.handleNextPage}
-                    onBackPage={this.handleBackPage}
-                    pages={this.state.pages}>
-                  </CounterPages>
-                }
-              ></Route>
-              </Routes> */}
-
-
-                {/* renders every page at the same time */}
-              <Routes>
-              {this.state.pages.map(page => <Route
-                exact
-                path={page.way}
-                key= {page.id}
-                element={
-                  <Page
-                    key={page.id}
-                    id={page.id}
-                    onAddPage={this.handleAddPage}
-                    onDeletePage={this.handleDeletePage}
-                    onNextPage={this.handleNextPage}
-                    onBackPage={this.handleBackPage}
-                    currentPage={page}
-                    index={this.state.index}
-                    onChangePageName = {this.handleChangePageName}
-                    onGetIndexTop={this.getIndexTop()}
-                    onGetIndexBottom={this.getIndexBottom()}>
-                  </Page>
-                }
-              ></Route>)}
-              </Routes>
-
-              
-            {/* {
-              <CounterPages>
-                id={this.state.pages[this.state.index - 1].id}
+{/* <Routes>
+          <Route
+            exact
+            path={this.state.pages[this.state.index.value - 1].way}
+            element={
+              <CounterPages
+                key={this.state.pages[this.state.index.value - 1].id}
+                id={this.state.pages[this.state.index.value - 1].id}
                 onAddPage={this.handleAddPage}
                 onDeletePage={this.handleDeletePage}
                 onNextPage={this.handleNextPage}
                 onBackPage={this.handleBackPage}
+                pages={this.state.pages}>
               </CounterPages>
-            } */}
-        {/* this is for loading every page at once */}
-        {/* <BrowserRouter>
-      {this.state.pages.map(page => <CounterPages>
-        id={page.id}
-        onAddPage={this.handleAddPage}
-        onDeletePage={this.handleDeletePage}
-        </CounterPages>)}
-        </BrowserRouter> */}
-      </div>
-      </BrowserRouter>
-    );
-    }
+            }
+          ></Route>
+          </Routes> */}
+
+
+            {/* renders every page at the same time */}
+          <Routes>
+          {this.state.pages.map(page => <Route
+            exact
+            path={page.way}
+            key= {page.id}
+            element={
+              <Page
+                key={page.id}
+                id={page.id}
+                onAddPage={this.handleAddPage}
+                onDeletePage={this.handleDeletePage}
+                onNextPage={this.handleNextPage}
+                onBackPage={this.handleBackPage}
+                currentPage={page}
+                index={this.state.index}
+                onChangePageName = {this.handleChangePageName}
+                onGetIndexTop={this.getIndexTop()}
+                onGetIndexBottom={this.getIndexBottom()}>
+              </Page>
+            }
+          ></Route>)}
+          </Routes>
+
+          
+        {/* {
+          <CounterPages>
+            id={this.state.pages[this.state.index - 1].id}
+            onAddPage={this.handleAddPage}
+            onDeletePage={this.handleDeletePage}
+            onNextPage={this.handleNextPage}
+            onBackPage={this.handleBackPage}
+          </CounterPages>
+        } */}
+    {/* this is for loading every page at once */}
+    {/* <BrowserRouter>
+  {this.state.pages.map(page => <CounterPages>
+    id={page.id}
+    onAddPage={this.handleAddPage}
+    onDeletePage={this.handleDeletePage}
+    </CounterPages>)}
+    </BrowserRouter> */}
+  </div>
+  </BrowserRouter>
+);
+}
     getIndexTop()
     {
       let val = false;

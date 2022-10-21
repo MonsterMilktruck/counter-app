@@ -1,15 +1,14 @@
-const express = require('express');
-const db = require('./config/db')
-const cors = require('cors')
+import express from 'express';
+import cors from 'cors';
 
 const app = express();
-const  PORT = 3002;
+export const  PORT = 3002;
 app.use(cors());
 app.use(express.json())
 
 // Route to get all pages
 app.get("/api/get", (req,res)=>{
-db.query("SELECT * FROM page", (err,result)=>{
+    query("SELECT * FROM page;", (err,result)=>{
     if(err) {
     console.log(err)
     } 
@@ -20,7 +19,7 @@ res.send(result)
 app.get("/api/getFromId/:id", (req,res)=>{
 
 const id = req.params.pageID;
- db.query("SELECT * FROM page WHERE id = ?", id, 
+ query("SELECT * FROM page WHERE id = ?", id, 
  (err,result)=>{
     if(err) {
     console.log(err)
@@ -35,7 +34,7 @@ const Pname = req.body.Pname;
 const pageID = req.body.pageID;
 const uid = req.body.uid;
 
-db.query("INSERT INTO page (Pname, pageID, uid) VALUES (?,?,?)",[Pname,pageID,uid], (err,result)=>{
+    query("INSERT INTO page (Pname, pageID, uid) VALUES (?,?,?)",[Pname,pageID,uid], (err,result)=>{
    if(err) {
    console.log(err)
    } 
@@ -50,7 +49,7 @@ app.post('/api/create', (req,res)=> {
     const value = req.body.Cname;
     const pid = req.body.pid;
     
-    db.query("INSERT INTO page (Cname, counterID, value, pid) VALUES (?,?,?,?)",[Cname,counterID,value, pid], (err,result)=>{
+    query("INSERT INTO page (Cname, counterID, value, pid) VALUES (?,?,?,?)",[Cname,counterID,value, pid], (err,result)=>{
        if(err) {
        console.log(err)
        } 
@@ -69,7 +68,7 @@ app.post('/api/create', (req,res)=> {
 app.post('/api/like/:id',(req,res)=>{
 
 const id = req.params.id;
-db.query("UPDATE posts SET likes = likes + 1 WHERE id = ?",id, (err,result)=>{
+    query("UPDATE posts SET likes = likes + 1 WHERE id = ?",id, (err,result)=>{
     if(err) {
    console.log(err)   } 
    console.log(result)
@@ -81,11 +80,11 @@ db.query("UPDATE posts SET likes = likes + 1 WHERE id = ?",id, (err,result)=>{
 app.delete('/api/delete/:id',(req,res)=>{
 const id = req.params.id;
 
-db.query("DELETE FROM posts WHERE id= ?", id, (err,result)=>{
+    query("DELETE FROM posts WHERE id= ?", id, (err,result)=>{
 if(err) {
 console.log(err)
         } }) })
 
 app.listen(PORT, ()=>{
-    console.log(`Server is running on ＄{PORT}`)
+    console.log('Server is running on ' + PORT);
 })
