@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Counters from "./counters";
 import NavBar from "./navbar";
 
-class CounterPages extends Component {
+class Page extends Component {
 
   styleButton = {
     fontSize: 15,
@@ -159,4 +159,4 @@ class CounterPages extends Component {
 
 }
 
-export default CounterPages;
+export default Page;

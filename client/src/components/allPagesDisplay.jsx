@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { BrowserRouter, Routes, Route, Link, useNavigate, navigate, Redirect} from "react-router-dom";
 
-class AllPages extends Component {
+class AllPagesDisplay extends Component {
     state = {  } 
     render() { 
         return (
@@ -10,4 +10,4 @@ class AllPages extends Component {
     }
 }
  
-export default AllPages;
+export default AllPagesDisplay;

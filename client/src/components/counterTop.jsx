@@ -1,5 +1,5 @@
 
-import CounterPages from "./counterPages";
+import Page from "./Page";
 import { BrowserRouter, Routes, Route, Navigate, Link} from "react-router-dom";
 import React, { Component } from "react";
 import { findRenderedDOMComponentWithClass } from "react-dom/test-utils";
@@ -103,7 +103,7 @@ state = {
                 path={page.way}
                 key= {page.id}
                 element={
-                  <CounterPages
+                  <Page
                     key={page.id}
                     id={page.id}
                     onAddPage={this.handleAddPage}
@@ -115,7 +115,7 @@ state = {
                     onChangePageName = {this.handleChangePageName}
                     onGetIndexTop={this.getIndexTop()}
                     onGetIndexBottom={this.getIndexBottom()}>
-                  </CounterPages>
+                  </Page>
                 }
               ></Route>)}
               </Routes>

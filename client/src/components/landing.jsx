@@ -7,7 +7,7 @@ class Landing extends Component {
         return (
             <div>
             <h1>WELCOME!!!! this is the landing page :)</h1>
-            {/*fix links <Link path ="home">Home</Link> */}
+            <Link to ="home">Home</Link>
             </div>
         );
     }

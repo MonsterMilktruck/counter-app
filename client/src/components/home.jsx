@@ -7,7 +7,7 @@ class Home extends Component {
     render() { 
         return (
             <div>
-            <Link path="allPages">pages</Link>
+            <Link to="/allPages">pages</Link>
             </div>
         );
     }

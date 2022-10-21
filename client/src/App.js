@@ -2,11 +2,11 @@
 import "./App.css";
 import CounterTop from "./components/counterTop";
 import Home from "./components/home";
-import AllPages from "./components/allPages";
+import AllPagesDisplay from "./components/allPagesDisplay";
 import Landing from "./components/landing";
 import { BrowserRouter, Routes, Route, Link, useNavigate, navigate, Redirect} from "react-router-dom";
 import React, { Component } from "react";
-import CounterPages from "./components/counterPages";
+import Page from "./components/Page";
 
 
 // manages view
@@ -32,7 +32,7 @@ function App() {
        <Routes>
            <Route path="" element={<Landing />} />
            <Route path="home" element={<Home />} />
-           <Route path="allPages" element={<AllPages />}/>
+           <Route path="allPages" element={<AllPagesDisplay />}/>
        </Routes>
      </BrowserRouter>
       //<CounterTop/>
