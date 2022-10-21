@@ -1,14 +1,22 @@
-import express from 'express';
-import cors from 'cors';
+const express = require('express');
+const cors = require('cors')
+const mysql = require('mysql')
+
+const db = mysql.createConnection({
+host: "localhost",
+user: "root",
+password: "mysql",
+database:"counter" 
+})
 
 const app = express();
-export const  PORT = 3002;
+const  PORT = 3002;
 app.use(cors());
 app.use(express.json())
 
 // Route to get all pages
 app.get("/api/get", (req,res)=>{
-    query("SELECT * FROM page;", (err,result)=>{
+    db.query("SELECT * FROM page;", (err,result)=>{
     if(err) {
     console.log(err)
     } 
@@ -19,7 +27,7 @@ res.send(result)
 app.get("/api/getFromId/:id", (req,res)=>{
 
 const id = req.params.pageID;
- query("SELECT * FROM page WHERE id = ?", id, 
+ db.query("SELECT * FROM page WHERE id = ?", id, 
  (err,result)=>{
     if(err) {
     console.log(err)
@@ -34,7 +42,7 @@ const Pname = req.body.Pname;
 const pageID = req.body.pageID;
 const uid = req.body.uid;
 
-    query("INSERT INTO page (Pname, pageID, uid) VALUES (?,?,?)",[Pname,pageID,uid], (err,result)=>{
+    db.query("INSERT INTO page (Pname, pageID, uid) VALUES (?,?,?)",[Pname,pageID,uid], (err,result)=>{
    if(err) {
    console.log(err)
    } 
@@ -49,7 +57,7 @@ app.post('/api/create', (req,res)=> {
     const value = req.body.Cname;
     const pid = req.body.pid;
     
-    query("INSERT INTO page (Cname, counterID, value, pid) VALUES (?,?,?,?)",[Cname,counterID,value, pid], (err,result)=>{
+    db.query("INSERT INTO page (Cname, counterID, value, pid) VALUES (?,?,?,?)",[Cname,counterID,value, pid], (err,result)=>{
        if(err) {
        console.log(err)
        } 
@@ -68,7 +76,7 @@ app.post('/api/create', (req,res)=> {
 app.post('/api/like/:id',(req,res)=>{
 
 const id = req.params.id;
-    query("UPDATE posts SET likes = likes + 1 WHERE id = ?",id, (err,result)=>{
+    db.query("UPDATE posts SET likes = likes + 1 WHERE id = ?",id, (err,result)=>{
     if(err) {
    console.log(err)   } 
    console.log(result)
@@ -80,7 +88,7 @@ const id = req.params.id;
 app.delete('/api/delete/:id',(req,res)=>{
 const id = req.params.id;
 
-    query("DELETE FROM posts WHERE id= ?", id, (err,result)=>{
+    db.query("DELETE FROM posts WHERE id= ?", id, (err,result)=>{
 if(err) {
 console.log(err)
         } }) })

@@ -28,15 +28,14 @@ function App() {
        <Route path="allPages" element={<allPages />}/> */
 
        //add home for login too
-       
        <BrowserRouter>
        <Routes>
-           <Route path="" element={<Landing />} />
+           <Route path="" element={<CounterTop />} />
            <Route path="home" element={<Home />} />
-           <Route path="allPages" element={<AllPagesDisplay />}/>
+           <Route path="allPages/*" element={<AllPagesDisplay />}/>
+           <Route path="pages" element={<CounterTop/>}/>
        </Routes>
      </BrowserRouter>
-      //<CounterTop/>
     );
   
 

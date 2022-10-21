@@ -11,7 +11,7 @@ state = {
       { id: 1, name: "page #1", way: "/page1" },
       { id: 2, name: "page #2", way: "/page2" },
     ],
-    index: {value: 1},
+    index: 0,
   };
 
   //adds a page of counters
@@ -53,27 +53,27 @@ state = {
   //cycles forward a page to the next counter
   handleNextPage = () => {
     let index = this.state.index;
-    index.value++;
+    index++;
     console.log(index);
     this.setState({index});
     //sets link to the correct page - doesnt keep index state b/c of refreshing the page
     // (prob wanna set link AFTER server calls)
-    window.location.href=this.state.pages[index.value - 1].way;
+    window.location.href=this.state.pages[index - 1].way;
   };
 
   //cycles back a page to the previous counter
   handleBackPage = () => {
     let index = this.state.index;
-    index.value--;
+    index--;
     console.log(index);
     this.setState({index});
     //sets link to the correct page (prob wanna set link AFTER server calls)
-    window.location.href=this.state.pages[index.value - 1].way;
+    window.location.href=this.state.pages[index - 1].way;
   };
 
   render() {
     return(
-  <BrowserRouter>
+
   <div>
 
 {/* only renders 1 page at a time */}
@@ -97,20 +97,18 @@ state = {
 
 
             {/* renders every page at the same time */}
-          <Routes>
           {this.state.pages.map(page => <Route
-            exact
             path={page.way}
             key= {page.id}
             element={
               <Page
-                key={page.id}
-                id={page.id}
+                key={this.state.pages.id}
+                id={this.state.pages.id}
                 onAddPage={this.handleAddPage}
                 onDeletePage={this.handleDeletePage}
                 onNextPage={this.handleNextPage}
                 onBackPage={this.handleBackPage}
-                currentPage={page}
+                currentPage={this.state.pages[this.state.index]}
                 index={this.state.index}
                 onChangePageName = {this.handleChangePageName}
                 onGetIndexTop={this.getIndexTop()}
@@ -118,8 +116,19 @@ state = {
               </Page>
             }
           ></Route>)}
-          </Routes>
-
+          {/*<Page
+                key={this.state.pages.id}
+                id={this.state.pages.id}
+                onAddPage={this.handleAddPage}
+                onDeletePage={this.handleDeletePage}
+                onNextPage={this.handleNextPage}
+                onBackPage={this.handleBackPage}
+                currentPage={this.state.pages[this.state.index]}
+                index={this.state.index}
+                onChangePageName = {this.handleChangePageName}
+                onGetIndexTop={this.getIndexTop()}
+                onGetIndexBottom={this.getIndexBottom()}>
+              </Page>
           
         {/* {
           <CounterPages>
@@ -139,7 +148,6 @@ state = {
     </CounterPages>)}
     </BrowserRouter> */}
   </div>
-  </BrowserRouter>
 );
 }
     getIndexTop()

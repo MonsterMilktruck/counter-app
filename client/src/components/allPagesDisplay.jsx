@@ -1,10 +1,19 @@
 import React, { Component } from "react";
-import CounterTop from "./counterTop";
 import Axios from 'axios'
-import { BrowserRouter, Routes, Route, Link, useNavigate, navigate, Redirect} from "react-router-dom";
+import {Link, Route} from "react-router-dom";
+import CounterTop from "./counterTop";
 
+//Displays all pages for a single user
 class AllPagesDisplay extends Component {
-    state = { pages: [],
+    state = { pages: [{
+        Tname: 'default',
+        pageID: 0,
+        uid: -1,
+    },
+    {
+        Tname: 'default',
+        pageID: 1,
+        uid: -1,}]
     }
 
     componentDidMount() {
@@ -16,7 +25,11 @@ class AllPagesDisplay extends Component {
     
     render(){ 
         return (
-            <p>hi</p>
+            <ol>
+                {this.state.pages.map(page => <li key={page.pageID}>
+                    <Link to={"/" + page.Tname}>{page.Tname}</Link></li>
+                )}
+            </ol>
         );
     }
 }

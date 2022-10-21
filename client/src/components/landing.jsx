@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {Link} from "react-router-dom";
+import CounterTop from "./counterTop";
 
 class Landing extends Component {
     state = {  } 
