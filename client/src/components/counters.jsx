@@ -38,13 +38,13 @@ class Counters extends Component {
         </button>
         {this.props.counters.map((counter) => (
           <Counter
-            key={counter.id}
+            key={counter.counterID}
             onDelete={this.props.onDelete}
             onIncrement={this.props.onIncrement}
             onDecrement={this.props.onDecrement}
             counter={counter}
           >
-            <h4><ContentEditable className="editable" html={counter.name} disabled={!this.props.editable} onChange={this.props.onTextChange(counter)}/></h4>
+            <h4><ContentEditable className="editable" html={counter.Cname} disabled={!this.props.editable} onChange={this.props.onTextChange(counter)}/></h4>
           </Counter>
         ))}
 

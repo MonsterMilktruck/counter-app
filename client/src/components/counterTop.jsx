@@ -1,12 +1,14 @@
 
 import Page from "./Page";
-import { BrowserRouter, Routes, Route, Navigate, Link, useParams, useNavigate} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Link, useParams} from "react-router-dom";
+import { useNavigate} from "react-router";
 import React, { Component } from "react";
 import { findRenderedDOMComponentWithClass } from "react-dom/test-utils";
-import Axios from 'axios'
+import Axios from 'axios';
+
 
 function NavigateToNewPage() {
-  useNavigate("..");
+ // props.history.push('/leadslist')
 }
 class CounterTop extends Component {
 
@@ -35,7 +37,7 @@ state = {
     page = this.state.page;
     let text = event.target.value;
 
-    page.name = text;
+    page.Tname = text;
     // will update link AFTER the name is fully changed (by hitting save)
     // pages[index].way = "/" + text;
     // window.location.href=pages[index].way;
@@ -49,34 +51,30 @@ state = {
     for (let i = 0; i < pages.length; i++) {
       pages[i].id = i + 1;
     }
-    this.setState({ pages });
+    this.setState({ page });
   };
 
   //cycles forward a page to the next counter
   handleNextPage = () => {
-    //window.location.href=this.state.pages[index - 1].way;
-    Axios.get("http://localhost:3002/api/getNext/" + this.state.page.pageID + "/" + this.state.page.uid).then((data) =>{
-      let pageid = data.data["pageID"];
+    let pageid = 1;
+    //gets next pageID from database and changes the link to that page
+    Axios.get("http://localhost:3002/api/getNext/" + this.state.page[0].pageID + "/" + this.state.page[0].uid).then((data) =>{
+      pageid = data.data[0]["pageID"];
       console.log(pageid);
-    // <Navigate to={"/" + pageid}/>
-    NavigateToNewPage();
-    })
-    //sets link to the correct page - doesnt keep index state b/c of refreshing the page
-    // (prob wanna set link AFTER server calls)
-    /*let url = window.location.href.split('/');
-    url[url.indexOf('pages') + 1] = index;
-    let urlString = url.join('/'); 
-    window.location.href=urlString; */
+    window.location.href= "/pages/" + pageid;
+    });
   };
 
+  //NOTE NOT IMPLEMENTED YET
   //cycles back a page to the previous counter
   handleBackPage = () => {
-    let index = this.state.index;
-    index--;
-    console.log(index);
-    this.setState({index});
-    //sets link to the correct page (prob wanna set link AFTER server calls)
-    window.location.href=this.state.pages[index - 1].way;
+    let pageid = 1;
+    //gets next pageID from database and changes the link to that page
+    Axios.get("http://localhost:3002/api/getBack/" + this.state.page[0].pageID + "/" + this.state.page[0].uid).then((data) =>{
+      pageid = data.data[0]["pageID"];
+      console.log(pageid);
+    window.location.href= "/pages/" + pageid;
+    });
   };
 
   //fetches correct page on startup
@@ -104,8 +102,9 @@ state = {
 
   <div>
           <Page
-                key={this.state.page.id}
-                id={this.state.page.id}
+                key={this.state.page[0].pageID}
+                id={this.state.page[0].pageID}
+                pageID={this.state.page[0].pageID}
                 onAddPage={this.handleAddPage}
                 onDeletePage={this.handleDeletePage}
                 onNextPage={this.handleNextPage}

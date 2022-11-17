@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Counters from "./counters";
 import NavBar from "./navbar";
-
+import Axios from 'axios';
 class Page extends Component {
 
   styleButton = {
@@ -12,10 +12,10 @@ class Page extends Component {
 
   state = {
     counters: [
-      { id: 1, value: 0, name: "Counter #1" },
-      { id: 2, value: 0, name: "Counter #2" },
-      { id: 3, value: 0, name: "Counter #3" },
-      { id: 4, value: 0, name: "Counter #4" },
+      { counterID: 1, value: 0, Cname: "Counter #1" , pid: this.props.pageID},
+      { counterID: 2, value: 0, Cname: "Counter #2" , pid: this.props.pageID},
+      { counterID: 3, value: 0, Cname: "Counter #3" , pid: this.props.pageID},
+      { counterID: 4, value: 0, Cname: "Counter #4" , pid: this.props.pageID},
     ],
     edit: false,
   };
@@ -61,14 +61,25 @@ class Page extends Component {
   //adds a counter
   handleAdd = () => {
     const counters = [...this.state.counters];
+    let nextID = 0;
+    Axios.get("http://localhost:3002/api/lastCounter").then((data) =>{
+      nextID = data.data[0]["max(counterID)"] + 1;
+      console.log(nextID);
+    
     const tempCounter = {
-      id: counters.length + 1,
+      counterID: nextID,
       value: 0,
-      name: "Counter #" + (counters.length + 1),
+      Cname: "Counter" + (counters.length + 1),
+      pid: this.props.pageID
     };
+    console.log(tempCounter["Cname"]);
+    console.log(tempCounter["counterID"]);
+    console.log(tempCounter["pid"]);
+    Axios.post("http://localhost:3002/api/create/counter/" + tempCounter["Cname"] + "/" + tempCounter["counterID"] + "/" + tempCounter["pid"]);
     counters.push(tempCounter);
     this.setState({ counters });
-  };
+  });
+};
 
   //switches mode to Edit so names can be changed
   handleEditMode = () => {
@@ -84,6 +95,15 @@ class Page extends Component {
     counters[index].name = event.target.value;
     this.setState({counters});
   };
+
+  componentDidMount()
+  {
+    Axios.get("http://localhost:3002/api/getCounters/" + this.props.pageID).then((data) =>{
+      let counters = data.data;
+      console.log(counters)
+      this.setState({counters});
+    })
+  }
 
   render() {
     return (
@@ -103,7 +123,7 @@ class Page extends Component {
 
           {/* displays counters */}
           <Counters
-            key={this.props.id}
+            key={this.props.counterID}
             counters={this.state.counters}
             editable={this.state.edit}
             onReset={this.handleReset}

@@ -1,6 +1,6 @@
 const express = require('express');
-const cors = require('cors')
-const mysql = require('mysql')
+const cors = require('cors');
+const mysql = require('mysql');
 
 const db = mysql.createConnection({
 host: "localhost",
@@ -12,10 +12,12 @@ database:"counter"
 const app = express();
 const  PORT = 3002;
 app.use(cors());
-app.use(express.json())
+app.use(express.json());
 
 
 /* GETTING */
+
+/* pages */
 
 // Route to get all pages for a user
 app.get("/api/get", (req,res)=>{
@@ -40,7 +42,7 @@ app.get("/api/getNext/:id/:uid", (req,res)=>{
     console.log(err)
     } 
     console.log("Get request successful: page after retrieved");
-res.send(result)
+    res.send(result)
 });   });
 
 // Route to get page ID for back page
@@ -76,8 +78,7 @@ const uid = req.params.uid;
         console.log("Get request returned null");
     }
     else {
-        console.log(result);
-    //console.log("Get request successful for " + uid + "." + result[0].Tname);
+    console.log("Get request successful for " + uid + "." + result[0]["Tname"]);
     res.send(result);
     }
     });   });
@@ -93,6 +94,33 @@ app.get("/api/getCount/:uid", (req,res)=>{
     } 
     count = result[0]['count(*)']
     console.log("Get request successful for count: " + count);
+res.send(result)
+});   });
+
+/* counters */
+
+// Route to get all counters for 1 page
+app.get("/api/getCounters/:pid", (req,res)=>{
+
+    const pID = req.params.pid;
+
+    db.query("SELECT * FROM counter where pid = ?;", [pID], (err,result)=>{
+    if(err) {
+    console.log(err)
+    } 
+    console.log("Get request successful: Counters displayed");
+res.send(result)
+});   });
+
+//gets last counterID
+app.get("/api/lastCounter", (req,res)=>{
+
+
+    db.query("SELECT max(counterID) FROM counter;", (err,result)=>{
+    if(err) {
+    console.log(err)
+    } 
+    console.log("Get request successful: max counter retrieved");
 res.send(result)
 });   });
 
@@ -114,7 +142,7 @@ app.put('/api/updatePageName', (req,res)=> {
     });   })
 
 
-/* POSTING */
+/* CREATING */
 
 // Route for creating the page
 app.post('/api/create', (req,res)=> {
@@ -131,14 +159,14 @@ const uid = req.body.uid;
 });   })
 
 // Route for creating a counter
-app.post('/api/create', (req,res)=> {
+app.post("/api/create/counter/:Cname/:counterID/:pid", (req,res)=> {
 
-    const Cname = req.body.Cname;
-    const counterID= req.body.counterID;
-    const value = req.body.Cname;
-    const pid = req.body.pid;
+    const Cname = req.params.Cname;
+    const counterID= req.params.counterID;
+    const pid = req.params.pid;
     
-    db.query("INSERT INTO page (Cname, counterID, value, pid) VALUES (?,?,?,?)",[Cname,counterID,value, pid], (err,result)=>{
+    
+    db.query("INSERT INTO counter (Cname, counterID, value, pid) VALUES (?,?,0,?)",[Cname,counterID, pid], (err,result)=>{
        if(err) {
        console.log(err)
        } 
