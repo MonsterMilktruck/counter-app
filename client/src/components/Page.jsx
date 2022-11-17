@@ -90,7 +90,7 @@ class Page extends Component {
       <React.Fragment>
         <NavBar
           totalCounters={this.state.counters.filter((c) => c.value > 0).length}
-          pageName ={this.props.currentPage.name}
+          pageName ={this.props.currentPage.Tname}
           nextPage = {this.props.onNextPage}
           backPage = {this.props.onBackPage}
           onGetIndexBottom = {this.props.onGetIndexBottom}

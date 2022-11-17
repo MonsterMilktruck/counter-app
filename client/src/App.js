@@ -14,28 +14,16 @@ import Page from "./components/Page";
 function App() {
 
     return (
-      /* <BrowserRouter>
-      // <div>
-      //   <Routes>
-      //     <Route path = 'counters' element=
-       <CounterTop/>/*
-      // </Route>
-      // </Routes>
-      // </div>
-       </BrowserRouter>
-       <Route index element={<User />} /> 
-       <Route path="/" element={<Landing />} />
-       <Route path="allPages" element={<allPages />}/> */
-
        //add home for login too
        <BrowserRouter>
        <Routes>
            <Route path="" element={<Landing />} />
            <Route path="home" element={<Home />} />
            <Route exact path="pages" element={<AllPagesDisplay />}/>
-           <Route path="pages/:id" element={<CounterTop />} />
+           <Route path="pages/:id" element={<CounterTop uid = {0}/>} />
        </Routes>
      </BrowserRouter> 
+     //NOTE: when adding user implementation change uid to correct uid with a mysql request
     );
   
 

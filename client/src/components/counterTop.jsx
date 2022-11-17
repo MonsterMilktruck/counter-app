@@ -1,15 +1,20 @@
 
 import Page from "./Page";
-import { BrowserRouter, Routes, Route, Navigate, Link, useParams} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Link, useParams, useNavigate} from "react-router-dom";
 import React, { Component } from "react";
 import { findRenderedDOMComponentWithClass } from "react-dom/test-utils";
 import Axios from 'axios'
 
+function NavigateToNewPage() {
+  useNavigate("..");
+}
 class CounterTop extends Component {
 
+//contains default information to be overrided when server call is made
 state = {
-    page: { id: 1, name: "page #1"},
-    index: 0,
+    page: [{Tname: "UNKNOWN PAGE", uid: this.props.uid, pageID: 1}],
+    index: 1,
+    numPages: 1
   };
 
   //adds a page of counters
@@ -24,18 +29,17 @@ state = {
     this.setState({ pages });
   };
 
-  //changes name of page, the link, and updates array of pages
+  //changes name of page and updates page name in server and in frontend
   handleChangePageName = (page) => (event) => {
 
-    const pages = [...this.state.pages];
+    page = this.state.page;
     let text = event.target.value;
 
-    let index = pages.indexOf(page);
-    pages[index].name = text;
+    page.name = text;
     // will update link AFTER the name is fully changed (by hitting save)
     // pages[index].way = "/" + text;
     // window.location.href=pages[index].way;
-    this.setState({ pages });
+    this.setState({ page });
   };
 
   //deletes selected page of counters
@@ -50,13 +54,19 @@ state = {
 
   //cycles forward a page to the next counter
   handleNextPage = () => {
-    let index = this.state.index;
-    index++;
-    console.log(index);
-    this.setState({index});
+    //window.location.href=this.state.pages[index - 1].way;
+    Axios.get("http://localhost:3002/api/getNext/" + this.state.page.pageID + "/" + this.state.page.uid).then((data) =>{
+      let pageid = data.data["pageID"];
+      console.log(pageid);
+    // <Navigate to={"/" + pageid}/>
+    NavigateToNewPage();
+    })
     //sets link to the correct page - doesnt keep index state b/c of refreshing the page
     // (prob wanna set link AFTER server calls)
-    window.location.href=this.state.pages[index - 1].way;
+    /*let url = window.location.href.split('/');
+    url[url.indexOf('pages') + 1] = index;
+    let urlString = url.join('/'); 
+    window.location.href=urlString; */
   };
 
   //cycles back a page to the previous counter
@@ -69,64 +79,30 @@ state = {
     window.location.href=this.state.pages[index - 1].way;
   };
 
+  //fetches correct page on startup
   componentDidMount()
   {
     let url = window.location.href.split('/');
     let index = url.indexOf('pages');
     index += 1;
     index = Number(url[index]);
-    Axios.get("http://localhost:3002/api/getFromId/" + index).then((data) =>{
-      let page = data.data;
-      this.setState({page});
-    })
-    this.setState({index});
+    Axios.get("http://localhost:3002/api/getFromId/" + index + "/" + this.props.uid).then((data) =>{
+    let page = data.data;
+    console.log(page)
+    this.setState({page});
+  })
+  this.setState({index});
+
+  Axios.get("http://localhost:3002/api/getCount/" + this.state.page.uid).then((data) =>{
+    let numPages = data.data[0]['count(*)'];
+    this.setState({numPages});
+})
   }
 
   render() {
     return(
 
   <div>
-
-{/* only renders 1 page at a time */}
-{/* <Routes>
-          <Route
-            exact
-            path={this.state.pages[this.state.index.value - 1].way}
-            element={
-              <CounterPages
-                key={this.state.pages[this.state.index.value - 1].id}
-                id={this.state.pages[this.state.index.value - 1].id}
-                onAddPage={this.handleAddPage}
-                onDeletePage={this.handleDeletePage}
-                onNextPage={this.handleNextPage}
-                onBackPage={this.handleBackPage}
-                pages={this.state.pages}>
-              </CounterPages>
-            }
-          ></Route>
-          </Routes> */}
-
-
-            {/* renders every page at the same time 
-          {this.state.pages.map(page => <Route
-            path={page.way}
-            key= {page.id}
-            element={
-              <Page
-                key={this.state.pages.id}
-                id={this.state.pages.id}
-                onAddPage={this.handleAddPage}
-                onDeletePage={this.handleDeletePage}
-                onNextPage={this.handleNextPage}
-                onBackPage={this.handleBackPage}
-                currentPage={this.state.pages[this.state.index]}
-                index={this.state.index}
-                onChangePageName = {this.handleChangePageName}
-                onGetIndexTop={this.getIndexTop()}
-                onGetIndexBottom={this.getIndexBottom()}>
-              </Page>
-            }
-          ></Route>) */}
           <Page
                 key={this.state.page.id}
                 id={this.state.page.id}
@@ -134,30 +110,35 @@ state = {
                 onDeletePage={this.handleDeletePage}
                 onNextPage={this.handleNextPage}
                 onBackPage={this.handleBackPage}
-                currentPage={this.state.page}
+                currentPage={this.state.page[0]}
                 index={this.state.index}
-                onChangePageName = {this.handleChangePageName}>
+                onChangePageName = {this.handleChangePageName}
+                onGetIndexTop={this.getIndexTop()}
+                onGetIndexBottom={this.getIndexBottom()}>
               </Page>
-          
-        {/* {
-          <CounterPages>
-            id={this.state.pages[this.state.index - 1].id}
-            onAddPage={this.handleAddPage}
-            onDeletePage={this.handleDeletePage}
-            onNextPage={this.handleNextPage}
-            onBackPage={this.handleBackPage}
-          </CounterPages>
-        } */}
-    {/* this is for loading every page at once */}
-    {/* <BrowserRouter>
-  {this.state.pages.map(page => <CounterPages>
-    id={page.id}
-    onAddPage={this.handleAddPage}
-    onDeletePage={this.handleDeletePage}
-    </CounterPages>)}
-    </BrowserRouter> */}
   </div>
 );
 }
+    getIndexTop()
+    {
+      let val = false;
+      if(this.state.index === this.state.numPages)
+      {
+        val = true;
+      }
+    
+      return val;
+    
+    }
+
+    getIndexBottom()
+    {
+      let val = false;
+      if(this.state.index === 1)
+      {
+        val = true;
+      }
+      return val;
+    }
 }
     export default CounterTop;

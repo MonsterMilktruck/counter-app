@@ -14,26 +14,107 @@ const  PORT = 3002;
 app.use(cors());
 app.use(express.json())
 
-// Route to get all pages
+
+/* GETTING */
+
+// Route to get all pages for a user
 app.get("/api/get", (req,res)=>{
+
     db.query("SELECT * FROM page;", (err,result)=>{
     if(err) {
     console.log(err)
     } 
+    console.log("Get request successful: Pages displayed");
 res.send(result)
 });   });
 
-// Route to get one page
-app.get("/api/getFromId/:id", (req,res)=>{
+// Route to get page ID for next page
+app.get("/api/getNext/:id/:uid", (req,res)=>{
 
-const id = req.params.pageID;
- db.query("SELECT * FROM page WHERE pageID = ?", id, 
+    const id = req.params.id;
+    const uid = req.params.uid;
+
+    db.query("SELECT pageID FROM page WHERE pageID = (SELECT min(pageID) FROM page WHERE pageID > ?) and uid = ?;",[id, uid],
+    (err,result)=>{
+    if(err) {
+    console.log(err)
+    } 
+    console.log("Get request successful: page after retrieved");
+res.send(result)
+});   });
+
+// Route to get page ID for back page
+app.get("/api/getBack/:id/:uid", (req,res)=>{
+
+    const id = req.params.id;
+    const uid = req.params.uid;
+
+    db.query("SELECT pageID FROM page WHERE pageID = (SELECT max(pageID) FROM page WHERE pageID < ?) and uid = ?;",[id, uid],
+    (err,result)=>{
+    if(err) {
+    console.log(err)
+    } 
+    console.log("Get request successful: page before retrieved");
+res.send(result)
+});   });
+
+// Route to get one page for a user
+app.get("/api/getFromId/:id/:uid", (req,res)=>{
+
+const id = req.params.id;
+const uid = req.params.uid;
+
+
+ db.query("SELECT * FROM page WHERE pageID = ? and uid = ?;", [id, uid], 
  (err,result)=>{
     if(err) {
     console.log(err)
     } 
-    res.send(result)
+    else if(result.data === [])
+    {
+        //NOTE: Doesnt send this to console but returns it anyways - also url for next page is still bugged
+        console.log("Get request returned null");
+    }
+    else {
+        console.log(result);
+    //console.log("Get request successful for " + uid + "." + result[0].Tname);
+    res.send(result);
+    }
     });   });
+
+    // Route to get # of pages for a user
+app.get("/api/getCount/:uid", (req,res)=>{
+    const uid = req.params.uid;
+
+
+    db.query("SELECT count(*) FROM page WHERE uid = ?;", [uid], (err,result)=>{
+    if(err) {
+    console.log(err)
+    } 
+    count = result[0]['count(*)']
+    console.log("Get request successful for count: " + count);
+res.send(result)
+});   });
+
+
+/* UPDATING */
+
+// Route to update a page's name
+app.put('/api/updatePageName', (req,res)=> {
+
+    const Pname = req.body.Pname;
+    const pageID = req.body.pageID;
+    const uid = req.body.uid;
+    
+        db.query("INSERT INTO page (Pname, pageID, uid) VALUES (?,?,?)",[Pname,pageID,uid], (err,result)=>{
+       if(err) {
+       console.log(err)
+       } 
+       console.log(result)
+    });   })
+
+
+/* POSTING */
 
 // Route for creating the page
 app.post('/api/create', (req,res)=> {
