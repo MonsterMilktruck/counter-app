@@ -127,19 +127,36 @@ res.send(result)
 
 /* UPDATING */
 
-// Route to update a page's name
-app.put('/api/updatePageName', (req,res)=> {
+// Route to update names of counters and page for a specific page
+app.put('/api/updateNames', (req,res)=> {
 
-    const Pname = req.body.Pname;
-    const pageID = req.body.pageID;
-    const uid = req.body.uid;
+    const payload = req.body;
+    const Pname = payload.name;
+    console.log(Pname);
+    const pageID = payload.pageID;
+    console.log(pageID);
+    const uid = payload.uid;
+    console.log(uid);
+    const Cnames = payload.counters;
+    console.log(Cnames);
+    const Cnums = payload.length;
+    console.log(Cnums);
     
-        db.query("INSERT INTO page (Pname, pageID, uid) VALUES (?,?,?)",[Pname,pageID,uid], (err,result)=>{
+        db.query("UPDATE page SET Tname = ? WHERE pageID = ? AND uid = ?",[Pname,pageID,uid], (err,result)=>{
        if(err) {
        console.log(err)
        } 
        console.log(result)
-    });   })
+    });
+    for(let i = 0; i < Cnums; i++) {
+
+    db.query("UPDATE counter SET Cname = ? WHERE counterID = ? AND pid = ?",[Cnames[i].Cname, Cnames[i].counterID,pageID], (err,result)=>{
+        if(err) {
+        console.log(err)
+        } 
+        console.log(result)
+     });}
+    });
 
 
 /* CREATING */
@@ -180,28 +197,22 @@ app.post("/api/create/counter/:Cname/:counterID/:pid", (req,res)=> {
 
 
 
-
-// Route to like a post
-app.post('/api/like/:id',(req,res)=>{
-
-const id = req.params.id;
-    db.query("UPDATE posts SET likes = likes + 1 WHERE id = ?",id, (err,result)=>{
-    if(err) {
-   console.log(err)   } 
-   console.log(result)
-    });    
-});
+/* DELETING */
 
 // Route to delete a post
 
-app.delete('/api/delete/:id',(req,res)=>{
-const id = req.params.id;
+app.delete("/api/delete/counter/:pid/:id",(req,res)=>{
+    const id = req.params.id;
+    const pid = req.params.pid;
 
-    db.query("DELETE FROM posts WHERE id= ?", id, (err,result)=>{
+    db.query("DELETE FROM counter WHERE pid = ? and counterID= ?", [pid,id], (err,result)=>{
 if(err) {
 console.log(err)
-        } }) })
+        }
+        console.log("delete successful") }) })
 
+
+        /*Server listening port */
 app.listen(PORT, ()=>{
     console.log('Server is running on ' + PORT);
 })

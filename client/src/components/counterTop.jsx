@@ -19,7 +19,7 @@ state = {
     numPages: 1
   };
 
-  //adds a page of counters
+  /*adds a page of counters
   handleAddPage = () => {
     let pages = [...this.state.pages];
     const tempPage = {
@@ -29,7 +29,7 @@ state = {
     };
     pages.push(tempPage);
     this.setState({ pages });
-  };
+  }; */
 
   //changes name of page and updates page name in server and in frontend
   handleChangePageName = (page) => (event) => {
@@ -37,7 +37,7 @@ state = {
     page = this.state.page;
     let text = event.target.value;
 
-    page.Tname = text;
+    page[0].Tname = text;
     // will update link AFTER the name is fully changed (by hitting save)
     // pages[index].way = "/" + text;
     // window.location.href=pages[index].way;

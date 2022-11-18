@@ -22,7 +22,8 @@ class Page extends Component {
 
   //deletes a counter
   handleDelete = (counterId) => {
-    const counters = this.state.counters.filter((c) => c.id !== counterId); // filters anything but the one to delete
+    Axios.delete("http://localhost:3002/api/delete/counter/" + this.props.pageID + "/" + counterId);
+    const counters = this.state.counters.filter((c) => c.counterID !== counterId); // filters anything but the one to delete
     for (let i = 0; i < counters.length; i++) {
       counters[i].id = i + 1;
     }
@@ -64,7 +65,6 @@ class Page extends Component {
     let nextID = 0;
     Axios.get("http://localhost:3002/api/lastCounter").then((data) =>{
       nextID = data.data[0]["max(counterID)"] + 1;
-      console.log(nextID);
     
     const tempCounter = {
       counterID: nextID,
@@ -72,9 +72,6 @@ class Page extends Component {
       Cname: "Counter" + (counters.length + 1),
       pid: this.props.pageID
     };
-    console.log(tempCounter["Cname"]);
-    console.log(tempCounter["counterID"]);
-    console.log(tempCounter["pid"]);
     Axios.post("http://localhost:3002/api/create/counter/" + tempCounter["Cname"] + "/" + tempCounter["counterID"] + "/" + tempCounter["pid"]);
     counters.push(tempCounter);
     this.setState({ counters });
@@ -84,6 +81,15 @@ class Page extends Component {
   //switches mode to Edit so names can be changed
   handleEditMode = () => {
     let edit = !this.state.edit;
+    if(edit === false)
+    {
+      let payload = {name: this.props.currentPage.Tname, 
+      pageID: this.props.pageID, 
+      uid: this.props.currentPage.uid, 
+      length: this.state.counters.length, 
+      counters: this.state.counters};
+      Axios.put("http://localhost:3002/api/updateNames", payload);
+    }
     this.setState({ edit });
   };
 
@@ -92,7 +98,7 @@ class Page extends Component {
     let counters = [...this.state.counters];
     let index = counters.indexOf(counter);
     counters[index] = { ...counter };
-    counters[index].name = event.target.value;
+    counters[index].Cname = event.target.value;
     this.setState({counters});
   };
 
